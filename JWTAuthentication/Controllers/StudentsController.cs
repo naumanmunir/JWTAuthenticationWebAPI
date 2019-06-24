@@ -6,15 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JWTAuthentication.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace JWTAuthentication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("")]
     public class StudentsController : ControllerBase
     {
         private readonly DWContext _context;
-
+        
         public StudentsController(DWContext context)
         {
             _context = context;
