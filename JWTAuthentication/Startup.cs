@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JWTAuthentication.Models;
+using JWTAuthentication.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -70,7 +71,7 @@ namespace JWTAuthentication
             services.AddCors(o => o.AddPolicy("", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             services.AddScoped<IAuthenticateSerivce, TokenAuthenticationService>();
-
+            services.AddScoped<IUserManagementService, UserManagementService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
