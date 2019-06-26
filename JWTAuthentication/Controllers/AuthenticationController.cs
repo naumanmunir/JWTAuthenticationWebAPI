@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JWTAuthentication.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AuthenticationController : Controller
     {
         private readonly IAuthenticateSerivce authService;

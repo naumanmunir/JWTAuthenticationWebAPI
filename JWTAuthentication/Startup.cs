@@ -68,7 +68,7 @@ namespace JWTAuthentication
             };
 
             //cross-origin resource - allows access to this API from any source
-            services.AddCors(o => o.AddPolicy("", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+            services.AddCors(o => o.AddPolicy("Public", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             services.AddScoped<IAuthenticateSerivce, TokenAuthenticationService>();
             services.AddScoped<IUserManagementService, UserManagementService>();
@@ -87,7 +87,7 @@ namespace JWTAuthentication
                 app.UseHsts();
             }
 
-            app.UseCors();  //cross-origin resource
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());  //cross-origin resource
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
