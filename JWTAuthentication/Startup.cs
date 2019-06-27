@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace JWTAuthentication
 {
@@ -33,8 +34,14 @@ namespace JWTAuthentication
         {
             services.AddDbContext<DWContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //cross-origin resource - allows access to this API from any source
+            services.AddCors(o => o.AddPolicy("Public", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddSwaggerGen(x => x.SwaggerDoc("v1", new OpenApiInfo { Title = "SchoolAPI", Version = "v1" }));
+
+            #region JWT Auth Preparation
             services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
             var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             var secret = Encoding.ASCII.GetBytes(token.Secret);
@@ -59,16 +66,7 @@ namespace JWTAuthentication
                 };
             });
 
-            var ValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(secret),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-
-            //cross-origin resource - allows access to this API from any source
-            services.AddCors(o => o.AddPolicy("Public", x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+            #endregion
 
             services.AddScoped<IAuthenticateSerivce, TokenAuthenticationService>();
             services.AddScoped<IUserManagementService, UserManagementService>();
@@ -87,7 +85,10 @@ namespace JWTAuthentication
                 app.UseHsts();
             }
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());  //cross-origin resource
+            app.UseSwagger();
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "School API v1"));
+
+            app.UseCors();  //cross-origin resource
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

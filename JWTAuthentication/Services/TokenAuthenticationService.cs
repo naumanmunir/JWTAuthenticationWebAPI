@@ -27,7 +27,7 @@ namespace JWTAuthentication.Models
             token = string.Empty;
 
             if (!userManagementService.IsUserValid(user)) return false;
-
+            
             var claim = new[]
             {
                 new Claim(ClaimTypes.Name, user.Username)

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using JWTAuthentication.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JWTAuthentication.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("Public")]
     [ApiController]
     public class AuthenticationController : Controller
     {
